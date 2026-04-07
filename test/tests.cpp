@@ -5,7 +5,7 @@
 #include "circle.h"
 #include "tasks.h"
 
-TEST(CircleTest, radius_upd) {
+TEST(CircleTest, radius_upd) { // t
   Circle c(10);
 
   EXPECT_NEAR(c.getFerence(), 62.8318, 0.001);
