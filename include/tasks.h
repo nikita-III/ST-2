@@ -6,4 +6,4 @@ double taskEarth(double earthRadiusKm, double extraLengthM);
 double taskPool(double poolRadius, double pathWidth, double priceConcrete,
                 double priceFence);
 
-#endif
+#endif  // INCLUDE_TASKS_H_

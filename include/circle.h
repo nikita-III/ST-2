@@ -27,4 +27,4 @@ class Circle {
   double getArea() const;
 };
 
-#endif
+#endif  // INCLUDE_CIRCLE_H_
