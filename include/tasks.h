@@ -2,8 +2,8 @@
 #ifndef INCLUDE_TASKS_H_
 #define INCLUDE_TASKS_H_
 
-double taskEarth(double earthRadiusKm, double extraLengthM);
-double taskPool(double poolRadius, double pathWidth, double priceConcrete,
-                double priceFence);
+double processForEarth(double radiusKm, double lengthMeters);
+double processForPool(double radius, double pathWidth, double priceForConcrete,
+                double priceForFence);
 
 #endif  // INCLUDE_TASKS_H_
