@@ -1,21 +1,25 @@
 // Copyright 2025 UNN-CS Team
+#include <cmath>
 #include "tasks.h"
 #include "circle.h"
 
-double processForEarth(double radiusKm, double lengthMeters) {
-  Circle earth(radiusKm * 1000);
-  double initialFerence = earth.getFerence();
-  earth.setFerence(initialFerence + lengthMeters);
-  return earth.getRadius() - (radiusKm * 1000);
+double earthRopeGap(double earthRadiusKm, double addedLengthM) {
+    double earthRadiusM = earthRadiusKm * 1000.0;
+    double initialLength = 2.0 * PI * earthRadiusM;
+    double newLength = initialLength + addedLengthM;
+    double newRadius = newLength / (2.0 * PI);
+    return newRadius - earthRadiusM;
 }
 
-double processForPool(double radius, double pathWidth, double priceForConcrete,
-                double priceForFence) {
-  Circle pool(radius);
-  Circle outer(radius + pathWidth);
-  double areaPath = outer.getArea() - pool.getArea();
-  double costOfConcrete = areaPath * priceForConcrete;
-  double costOfFence = outer.getFerence() * priceForFence;
+void poolCosts(double poolRadius, double pathWidth,
+               double concreteCostPerSqM, double fenceCostPerM,
+               double &concreteCost, double &fenceCost) {
+    Circle pool(poolRadius);
+    Circle outer(poolRadius + pathWidth);
 
-  return costOfConcrete + costOfFence;
+    double pathArea = outer.getArea() - pool.getArea();
+    concreteCost = pathArea * concreteCostPerSqM;
+
+    double fenceLength = outer.getFerence();
+    fenceCost = fenceLength * fenceCostPerM;
 }
