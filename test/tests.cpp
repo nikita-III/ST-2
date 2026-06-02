@@ -7,7 +7,7 @@
 
 const double EPS = 1e-9;
 
-// ==================== Тесты для класса Circle ====================
+// ==================== Circle ====================
 
 TEST(CircleTest, ConstructorAndGetters) {
     Circle c(5.0);
@@ -114,7 +114,7 @@ TEST(CircleTest, VerySmallValues) {
     EXPECT_NEAR(c.getArea(), PI * small * small, EPS);
 }
 
-// ==================== Тесты для задачи "Земля и верёвка" ====================
+// ==================== "Земля и верёвка" ====================
 
 TEST(EarthRopeTest, KnownFormula) {
     double added = 1.0;
@@ -136,7 +136,6 @@ TEST(EarthRopeTest, DifferentEarthRadius) {
 }
 
 TEST(EarthRopeTest, NegativeAddedLength) {
-    // При отрицательном добавлении верёвка становится короче, зазор отрицательный (верёвка врезается)
     double gap = earthRopeGap(6378.1, -1.0);
     EXPECT_NEAR(gap, -1.0 / (2.0 * PI), EPS);
 }
@@ -148,7 +147,7 @@ TEST(EarthRopeTest, RadiusInKmConversion) {
     EXPECT_NEAR(gap, added / (2.0 * PI), EPS);
 }
 
-// ==================== Тесты для задачи "Бассейн" ====================
+// ==================== "Бассейн" ====================
 
 TEST(PoolCostsTest, GivenExample) {
     double concreteCost, fenceCost;
@@ -166,7 +165,7 @@ TEST(PoolCostsTest, GivenExample) {
 TEST(PoolCostsTest, ZeroPathWidth) {
     double concreteCost, fenceCost;
     poolCosts(3.0, 0.0, 1000.0, 2000.0, concreteCost, fenceCost);
-    EXPECT_NEAR(concreteCost, 0.0, EPS); // нет дорожки
+    EXPECT_NEAR(concreteCost, 0.0, EPS);
     EXPECT_NEAR(fenceCost, 2.0 * PI * 3.0 * 2000.0, EPS);
 }
 
@@ -220,7 +219,7 @@ TEST(CircleTest, CopySemantics) {
 }
 
 TEST(EarthRopeTest, VeryLargeAddedLength) {
-    double added = 1e6; // 1000 км
+    double added = 1e6;
     double gap = earthRopeGap(6378.1, added);
     EXPECT_NEAR(gap, added / (2.0 * PI), 1e-6);
 }
