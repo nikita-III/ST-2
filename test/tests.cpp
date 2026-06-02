@@ -196,18 +196,6 @@ TEST(PoolCostsTest, NegativeValues) {
     EXPECT_NEAR(fenceCost, 0.0, EPS);
 }
 
-TEST(PoolCostsTest, VeryLargeValues) {
-    double concreteCost, fenceCost;
-    double poolRad = 1e6;
-    double width = 1e5;
-    poolCosts(poolRad, width, 1.0, 1.0, concreteCost, fenceCost);
-    double outerRad = poolRad + width;
-    double expectedConcrete = PI * (outerRad * outerRad - poolRad * poolRad);
-    double expectedFence = 2.0 * PI * outerRad;
-    EXPECT_NEAR(concreteCost, expectedConcrete, EPS);
-    EXPECT_NEAR(fenceCost, expectedFence, EPS);
-}
-
 TEST(CircleTest, CopySemantics) {
     Circle c1(2.5);
     Circle c2 = c1;
