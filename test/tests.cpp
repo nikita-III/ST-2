@@ -1,133 +1,237 @@
 // Copyright 2025 UNN-CS Team
 
 #include <gtest/gtest.h>
-#include <cstdint>
+#include <cmath>
 #include "circle.h"
 #include "tasks.h"
 
-TEST(CircleTest, radius_upd) {
-  Circle c(10);
-  EXPECT_NEAR(c.getFerence(), 62.8318, 0.001);
+const double EPS = 1e-9;
+
+// ==================== Тесты для класса Circle ====================
+
+TEST(CircleTest, ConstructorAndGetters) {
+    Circle c(5.0);
+    EXPECT_NEAR(c.getRadius(), 5.0, EPS);
+    EXPECT_NEAR(c.getFerence(), 2.0 * PI * 5.0, EPS);
+    EXPECT_NEAR(c.getArea(), PI * 25.0, EPS);
 }
 
-TEST(CircleTest, ference_upd) {
-  Circle c(0);
-  c.setFerence(62.8318);
-  EXPECT_NEAR(c.getRadius(), 10.0, 0.001);
+TEST(CircleTest, SetRadius) {
+    Circle c;
+    c.setRadius(3.0);
+    EXPECT_NEAR(c.getRadius(), 3.0, EPS);
+    EXPECT_NEAR(c.getFerence(), 2.0 * PI * 3.0, EPS);
+    EXPECT_NEAR(c.getArea(), PI * 9.0, EPS);
 }
 
-TEST(CircleCore, pi) {
-  Circle c(1.0);
-  EXPECT_NEAR(c.getArea(), PI, 1e-9);
+TEST(CircleTest, SetFerence) {
+    Circle c;
+    double circ = 10.0;
+    c.setFerence(circ);
+    double expectedRadius = circ / (2.0 * PI);
+    EXPECT_NEAR(c.getFerence(), circ, EPS);
+    EXPECT_NEAR(c.getRadius(), expectedRadius, EPS);
+    EXPECT_NEAR(c.getArea(), PI * expectedRadius * expectedRadius, EPS);
 }
 
-TEST(CircleUpdate, radius_ference) {
-  Circle c(1.0);
-  c.setRadius(2.0);
-  EXPECT_NEAR(c.getFerence(), 12.56637, 1e-5);
+TEST(CircleTest, SetArea) {
+    Circle c;
+    double a = 50.0;
+    c.setArea(a);
+    double expectedRadius = std::sqrt(a / PI);
+    EXPECT_NEAR(c.getArea(), a, EPS);
+    EXPECT_NEAR(c.getRadius(), expectedRadius, EPS);
+    EXPECT_NEAR(c.getFerence(), 2.0 * PI * expectedRadius, EPS);
 }
 
-TEST(CircleUpdate, radius_area) {
-  Circle c(1.0);
-  c.setRadius(3.0);
-  EXPECT_NEAR(c.getArea(), 28.27433, 1e-5);
+TEST(CircleTest, NegativeRadius) {
+    Circle c(-5.0);
+    EXPECT_NEAR(c.getRadius(), 0.0, EPS);
+    EXPECT_NEAR(c.getFerence(), 0.0, EPS);
+    EXPECT_NEAR(c.getArea(), 0.0, EPS);
 }
 
-TEST(CircleUpdate, ference_radius) {
-  Circle c(1.0);
-  c.setFerence(31.4159);
-  EXPECT_NEAR(c.getRadius(), 5.0, 1e-4);
+TEST(CircleTest, NegativeFerence) {
+    Circle c(3.0);
+    c.setFerence(-10.0);
+    EXPECT_NEAR(c.getFerence(), 0.0, EPS);
+    EXPECT_NEAR(c.getRadius(), 0.0, EPS);
+    EXPECT_NEAR(c.getArea(), 0.0, EPS);
 }
 
-TEST(CircleUpdate, ference_area) {
-  Circle c(1.0);
-  c.setFerence(6.28318);
-  EXPECT_NEAR(c.getArea(), 3.14159, 1e-5);
+TEST(CircleTest, NegativeArea) {
+    Circle c(3.0);
+    c.setArea(-20.0);
+    EXPECT_NEAR(c.getArea(), 0.0, EPS);
+    EXPECT_NEAR(c.getRadius(), 0.0, EPS);
+    EXPECT_NEAR(c.getFerence(), 0.0, EPS);
 }
 
-TEST(CircleUpdate, area_radius) {
-  Circle c(1.0);
-  c.setArea(78.5398);
-  EXPECT_NEAR(c.getRadius(), 5.0, 1e-4);
+TEST(CircleTest, ZeroRadius) {
+    Circle c(0.0);
+    EXPECT_NEAR(c.getRadius(), 0.0, EPS);
+    EXPECT_NEAR(c.getFerence(), 0.0, EPS);
+    EXPECT_NEAR(c.getArea(), 0.0, EPS);
 }
 
-TEST(CircleUpdate, area) {
-  Circle c(1.0);
-  c.setArea(12.56637);
-  EXPECT_NEAR(c.getFerence(), 12.56637, 1e-5);
+TEST(CircleTest, ConsistencyAfterMultipleSets) {
+    Circle c(2.0);
+    c.setFerence(20.0);
+    double r1 = c.getRadius();
+    double a1 = c.getArea();
+    c.setArea(100.0);
+    double r2 = c.getRadius();
+    double c2 = c.getFerence();
+    EXPECT_NEAR(c2, 2.0 * PI * r2, EPS);
+    EXPECT_NEAR(a1, PI * r1 * r1, EPS);
+    EXPECT_NEAR(c.getArea(), 100.0, EPS);
 }
 
-TEST(CircleEdge, S_mall) {
-  Circle c(10.0);
-  c.setArea(1e-10);
-  EXPECT_NEAR(c.getRadius(), 0.00000564, 1e-8);
-  EXPECT_NEAR(c.getFerence(), 0.00003544, 1e-8);
+TEST(CircleTest, SetRadiusThenFerenceThenArea) {
+    Circle c;
+    c.setRadius(4.0);
+    double oldFerence = c.getFerence();
+    double oldArea = c.getArea();
+    c.setFerence(oldFerence + 1.0);
+    EXPECT_NE(c.getRadius(), 4.0);
+    c.setArea(oldArea + 5.0);
+    EXPECT_NE(c.getFerence(), oldFerence + 1.0);
 }
 
-TEST(CircleEdge, r_0) {
-  Circle c(0.0);
-  EXPECT_DOUBLE_EQ(c.getArea(), 0.0);
-  EXPECT_DOUBLE_EQ(c.getFerence(), 0.0);
+TEST(CircleTest, LargeValues) {
+    double large = 1e12;
+    Circle c(large);
+    EXPECT_NEAR(c.getRadius(), large, EPS);
+    EXPECT_NEAR(c.getFerence(), 2.0 * PI * large, EPS);
+    EXPECT_NEAR(c.getArea(), PI * large * large, EPS);
 }
 
-TEST(CircleEdge, circe_big_num) {
-  Circle c(1e6);
-  EXPECT_NEAR(c.getFerence(), 6283185.3, 0.1);
+TEST(CircleTest, VerySmallValues) {
+    double small = 1e-12;
+    Circle c(small);
+    EXPECT_NEAR(c.getRadius(), small, EPS);
+    EXPECT_NEAR(c.getFerence(), 2.0 * PI * small, EPS);
+    EXPECT_NEAR(c.getArea(), PI * small * small, EPS);
 }
 
-TEST(TaskPool, concrete) {
-  double total = processForPool(3, 1, 1000, 0);
-  EXPECT_NEAR(total, 21991.1, 0.1);
+// ==================== Тесты для задачи "Земля и верёвка" ====================
+
+TEST(EarthRopeTest, KnownFormula) {
+    double added = 1.0;
+    double gap = earthRopeGap(6378.1, added);
+    EXPECT_NEAR(gap, added / (2.0 * PI), EPS);
 }
 
-TEST(TaskPool, normal) {
-  double total = processForPool(3, 1, 1000, 2000);
-  EXPECT_NEAR(total, 72256.6, 0.1);
+TEST(EarthRopeTest, ZeroAddedLength) {
+    double gap = earthRopeGap(6378.1, 0.0);
+    EXPECT_NEAR(gap, 0.0, EPS);
 }
 
-TEST(TaskPool, no_way) {
-  Circle pool(3);
-  double total = processForPool(3, 0, 1000, 2000);
-  EXPECT_NEAR(total, pool.getFerence() * 2000, 0.1);
+TEST(EarthRopeTest, DifferentEarthRadius) {
+    double added = 2.0;
+    double gap1 = earthRopeGap(6378.1, added);
+    double gap2 = earthRopeGap(1000.0, added);
+    EXPECT_NEAR(gap1, gap2, EPS);
+    EXPECT_NEAR(gap1, added / (2.0 * PI), EPS);
 }
 
-TEST(TaskPool, no_money) {
-  double total = processForPool(5, 2, 0, 0);
-  EXPECT_DOUBLE_EQ(total, 0.0);
+TEST(EarthRopeTest, NegativeAddedLength) {
+    // При отрицательном добавлении верёвка становится короче, зазор отрицательный (верёвка врезается)
+    double gap = earthRopeGap(6378.1, -1.0);
+    EXPECT_NEAR(gap, -1.0 / (2.0 * PI), EPS);
 }
 
-TEST(TaskPool, pool_small) {
-  double total = processForPool(1, 0.5, 1000, 2000);
-  EXPECT_NEAR(total, 22776.5, 0.1);
+TEST(EarthRopeTest, RadiusInKmConversion) {
+    double radiusKm = 1.0;
+    double added = 1.0;
+    double gap = earthRopeGap(radiusKm, added);
+    EXPECT_NEAR(gap, added / (2.0 * PI), EPS);
 }
 
-TEST(TaskPool, big_num) {
-  double total = processForPool(10, 2, 1000000, 1000000);
-  EXPECT_NEAR(total, 213628300.4, 1.0);
+// ==================== Тесты для задачи "Бассейн" ====================
+
+TEST(PoolCostsTest, GivenExample) {
+    double concreteCost, fenceCost;
+    poolCosts(3.0, 1.0, 1000.0, 2000.0, concreteCost, fenceCost);
+
+    double expectedPathArea = PI * 7.0;
+    double expectedConcreteCost = expectedPathArea * 1000.0;
+    double expectedFenceLength = 2.0 * PI * 4.0;
+    double expectedFenceCost = expectedFenceLength * 2000.0;
+
+    EXPECT_NEAR(concreteCost, expectedConcreteCost, EPS);
+    EXPECT_NEAR(fenceCost, expectedFenceCost, EPS);
 }
 
-TEST(Tasks, the_task) {
-  double gap = processForEarth(6378.1, 1.0);
-  EXPECT_NEAR(gap, 0.159, 0.001);
+TEST(PoolCostsTest, ZeroPathWidth) {
+    double concreteCost, fenceCost;
+    poolCosts(3.0, 0.0, 1000.0, 2000.0, concreteCost, fenceCost);
+    EXPECT_NEAR(concreteCost, 0.0, EPS); // нет дорожки
+    EXPECT_NEAR(fenceCost, 2.0 * PI * 3.0 * 2000.0, EPS);
 }
 
-TEST(TaskEarth, gap_norm) {
-  double gap = processForEarth(6378.1, 1.0);
-  EXPECT_NEAR(gap, 0.159, 0.001);
+TEST(PoolCostsTest, DifferentPoolRadius) {
+    double concreteCost, fenceCost;
+    poolCosts(5.0, 2.0, 500.0, 1000.0, concreteCost, fenceCost);
+    double outerRadius = 7.0;
+    double pathArea = PI * (outerRadius * outerRadius - 25.0);
+    double expectedConcrete = pathArea * 500.0;
+    double expectedFence = (2.0 * PI * outerRadius) * 1000.0;
+    EXPECT_NEAR(concreteCost, expectedConcrete, EPS);
+    EXPECT_NEAR(fenceCost, expectedFence, EPS);
 }
 
-TEST(TaskEarth, gap_10_m) {
-  double gap = processForEarth(6378.1, 10.0);
-  EXPECT_NEAR(gap, 1.591, 0.001);
+TEST(PoolCostsTest, ZeroPoolRadius) {
+    double concreteCost, fenceCost;
+    poolCosts(0.0, 1.0, 1000.0, 2000.0, concreteCost, fenceCost);
+    double expectedConcrete = PI * 1.0 * 1.0 * 1000.0;
+    double expectedFence = (2.0 * PI * 1.0) * 2000.0;
+    EXPECT_NEAR(concreteCost, expectedConcrete, EPS);
+    EXPECT_NEAR(fenceCost, expectedFence, EPS);
 }
 
-TEST(TaskEarth, gap_small) {
-  double gapEarth = processForEarth(6378.1, 1.0);
-  double gapTennisBall = processForEarth(0.000067, 1.0);
-  EXPECT_NEAR(gapEarth, gapTennisBall, 1e-7);
+TEST(PoolCostsTest, NegativeValues) {
+    double concreteCost, fenceCost;
+    poolCosts(-3.0, -1.0, 1000.0, 2000.0, concreteCost, fenceCost);
+    EXPECT_NEAR(concreteCost, 0.0, EPS);
+    EXPECT_NEAR(fenceCost, 0.0, EPS);
 }
 
-TEST(TaskEarth, l_neg) {
-  double gap = processForEarth(6378.1, -1.0);
-  EXPECT_NEAR(gap, -0.159, 0.001);
+TEST(PoolCostsTest, VeryLargeValues) {
+    double concreteCost, fenceCost;
+    double poolRad = 1e6;
+    double width = 1e5;
+    poolCosts(poolRad, width, 1.0, 1.0, concreteCost, fenceCost);
+    double outerRad = poolRad + width;
+    double expectedConcrete = PI * (outerRad * outerRad - poolRad * poolRad);
+    double expectedFence = 2.0 * PI * outerRad;
+    EXPECT_NEAR(concreteCost, expectedConcrete, EPS);
+    EXPECT_NEAR(fenceCost, expectedFence, EPS);
+}
+
+TEST(CircleTest, CopySemantics) {
+    Circle c1(2.5);
+    Circle c2 = c1;
+    EXPECT_NEAR(c2.getRadius(), c1.getRadius(), EPS);
+    EXPECT_NEAR(c2.getFerence(), c1.getFerence(), EPS);
+    EXPECT_NEAR(c2.getArea(), c1.getArea(), EPS);
+    c2.setRadius(10.0);
+    EXPECT_NE(c1.getRadius(), c2.getRadius());
+}
+
+TEST(EarthRopeTest, VeryLargeAddedLength) {
+    double added = 1e6; // 1000 км
+    double gap = earthRopeGap(6378.1, added);
+    EXPECT_NEAR(gap, added / (2.0 * PI), 1e-6);
+}
+
+TEST(PoolCostsTest, DifferentCosts) {
+    double concreteCost, fenceCost;
+    poolCosts(2.0, 0.5, 800.0, 1500.0, concreteCost, fenceCost);
+    double outerR = 2.5;
+    double pathArea = PI * (outerR * outerR - 4.0);
+    double expectedConcrete = pathArea * 800.0;
+    double expectedFence = (2.0 * PI * outerR) * 1500.0;
+    EXPECT_NEAR(concreteCost, expectedConcrete, EPS);
+    EXPECT_NEAR(fenceCost, expectedFence, EPS);
 }
