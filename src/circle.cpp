@@ -2,39 +2,39 @@
 #include <cmath>
 #include "circle.h"
 
-Circle::Circle(double r) { setRadius(r); }
-
-void Circle::updateFromRadius() {
-  ference = 2 * PI * radius;
-  area = PI * radius * radius;
-}
-
-void Circle::updateFromFerence() {
-  radius = ference / (2 * PI);
-  area = PI * radius * radius;
-}
-
-void Circle::updateFromArea() {
-  radius = std::sqrt(area / PI);
-  ference = 2 * PI * radius;
+Circle::Circle(double r) {
+    setRadius(r);
 }
 
 void Circle::setRadius(double r) {
-  radius = r;
-  updateFromRadius();
+    if (r < 0.0) r = 0.0;
+    radius = r;
+    ference = 2.0 * PI * radius;
+    area = PI * radius * radius;
 }
 
-void Circle::setFerence(double f) {
-  ference = f;
-  updateFromFerence();
+void Circle::setFerence(double c) {
+    if (c < 0.0) c = 0.0;
+    ference = c;
+    radius = ference / (2.0 * PI);
+    area = PI * radius * radius;
 }
 
 void Circle::setArea(double a) {
-  area = a;
-  updateFromArea();
+    if (a < 0.0) a = 0.0;
+    area = a;
+    radius = std::sqrt(area / PI);
+    ference = 2.0 * PI * radius;
 }
 
-// these r trivial
-double Circle::getRadius() const { return radius; }
-double Circle::getFerence() const { return ference; }
-double Circle::getArea() const { return area; }
+double Circle::getRadius() const {
+    return radius;
+}
+
+double Circle::getFerence() const {
+    return ference;
+}
+
+double Circle::getArea() const {
+    return area;
+}
