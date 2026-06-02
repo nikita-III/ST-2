@@ -5,12 +5,12 @@
 const double PI = 3.14159265358979323846;
 
 class Circle {
-private:
+ private:
     double radius;
     double ference; // длина окружности
     double area;
 
-public:
+ public:
     explicit Circle(double r = 0.0);
 
     void setRadius(double r);
